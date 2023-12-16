@@ -27,7 +27,7 @@ bool CheckIfInBounds(int index) {
 
 int main() {
   std::vector<int> nums_in_line;
-  std::vector<std::string> all_lines;
+  std::vector<std::string> lines_array;
   // Technaically a 2d array ^
   std::string line;
 
@@ -36,11 +36,11 @@ int main() {
 
   bool current_num_is_valid;
   while (std::cin >> line) {
-    all_lines.push_back(line);
+    lines_array.push_back(line);
   }
   for (int i = 0; i < 140; i++) {
     for (int j = 0; j < 140; j++) {
-      char current_char = all_lines[i][j];
+      char current_char = lines_array[i][j];
 
       if (IsAPeriod(current_char) || CheckIfSpecialCharacter(current_char)) {
         if (current_num_is_valid) {
@@ -61,7 +61,7 @@ int main() {
             //           << (CheckIfInBounds(x) && CheckIfInBounds(y))
             //           << std::endl;
             if (CheckIfInBounds(x) && CheckIfInBounds(y)) {
-              if (CheckIfSpecialCharacter(all_lines[x][y])) {
+              if (CheckIfSpecialCharacter(lines_array[x][y])) {
                 current_num_is_valid = true;
               }
             }

@@ -1,1 +1,2 @@
+Size of vector: 1000
 54708

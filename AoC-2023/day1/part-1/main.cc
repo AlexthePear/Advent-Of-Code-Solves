@@ -27,9 +27,10 @@ int main() {
   while (std::cin >> line) {
     v.push_back(GetTwoDigitInLine(line));
   }
-  std::cout << "Size of vector: " << v.size() << std::endl;
+  // std::cout << "Size of vector: " << v.size() << std::endl;
   for (int i : v) {
+    std::cout << i << std::endl;
     sum += i;
   }
-  std::cout << sum << std::endl;
+  // td::cout << sum << std::endl;
 }
