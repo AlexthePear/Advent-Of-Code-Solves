@@ -1,5 +1,11 @@
 #include <bits/stdc++.h>
 
+// OK SO NEW IDEA IN ORDER TO SAVE MEMORY
+// right now we save every single seed value then do conversions on them. that
+// is way to taxing on memory so instead lets just save the ranges and the
+// starting seed value thats already less we have to store. then for each seed
+// range we just store the minimum possible value that can exist in each range.
+// Part-1 code is gunna need some hella revamping but it should be doable
 template <typename T>
 void DisplayVector(std::vector<T> v, std::string vector_name) {
   std::cout << "Displaying " << vector_name << ": ";
@@ -9,7 +15,7 @@ void DisplayVector(std::vector<T> v, std::string vector_name) {
   std::cout << std::endl;
 }
 
-void DisplayMap(std::unordered_map<std::string, std::vector<std::string>> m) {
+void DisplayMap(std::map<std::string, std::vector<std::string>> m) {
   for (auto i : m) {
     std::cout << "Displaying " << i.first << std::endl;
     DisplayVector(i.second, "vector");
@@ -20,9 +26,10 @@ std::vector<long long> getSeeds(std::string s) {
   std::vector<long long> seeds;
   s.erase(0, s.find(":") + 1);
   std::stringstream ss(s);
-  std::string number;
-  while (ss >> number) {
-    seeds.push_back(std::stoll(number));
+  std::string seed;
+  std::string seed_range;
+  while (ss >> seed) {
+    seeds.push_back(std::stoll(seed));
   }
   return seeds;
 }
@@ -57,11 +64,34 @@ long long SeedConversionDestination(std::vector<std::string> conversions,
   return seed;
 }
 
+long long GetMinimumDestinationInSeedRange(
+    std::map<std::string, std::vector<std::string>> conversion_map,
+    long long seed, long long range) {
+  std::vector<std::string> conversion_order = {
+      "seed-to-soil map:",         "soil-to-fertilizer map:",
+      "fertilizer-to-water map:",  "water-to-light map:",
+      "light-to-temperature map:", "temperature-to-humidity map:",
+      "humidity-to-location map:"};
+  long long minimum_seed_in_range = -1;
+  for (std::string s : conversion_order) {
+    for (long long i = seed; i < seed + range; i++) {
+      if (minimum_seed_in_range == -1) {
+        minimum_seed_in_range = SeedConversionDestination(conversion_map[s], i);
+      } else {
+        minimum_seed_in_range =
+            std::min(minimum_seed_in_range,
+                     SeedConversionDestination(conversion_map[s], i));
+      }
+    }
+  }
+  return minimum_seed_in_range;
+}
+
 int main() {
   std::vector<long long> seeds_;
   std::string line;
   std::string current_map;
-  std::unordered_map<std::string, std::vector<std::string>> conversion_map;
+  std::map<std::string, std::vector<std::string>> conversion_map;
   while (std::getline(std::cin, line)) {
     if (line.empty()) {
       continue;
@@ -75,20 +105,16 @@ int main() {
       conversion_map[current_map].push_back(line);
     }
   }
-  std::vector<std::string> conversion_order = {
-      "seed-to-soil map:",         "soil-to-fertilizer map:",
-      "fertilizer-to-water map:",  "water-to-light map:",
-      "light-to-temperature map:", "temperature-to-humidity map:",
-      "humidity-to-location map:"};
-  for (int i = 0; i < seeds_.size(); i++) {
-    for (std::string s : conversion_order) {
-      seeds_[i] = SeedConversionDestination(conversion_map[s], seeds_[i]);
-    }
+  DisplayVector(seeds_, "seeds");
+  std::vector<long long> results;
+  for (int i = 0; i < seeds_.size(); i += 2) {
+    results.push_back(GetMinimumDestinationInSeedRange(
+        conversion_map, seeds_[i], seeds_[i + 1]));
   }
   // RESULTS
-  DisplayVector(seeds_, "results");
+  DisplayVector(results, "results");
   // Use min_element to get an iterator pointing to the smallest element
-  auto smallest = std::min_element(seeds_.begin(), seeds_.end());
+  auto smallest = std::min_element(results.begin(), results.end());
 
   // Dereference the iterator to get the smallest element
   int smallest_number = *smallest;
