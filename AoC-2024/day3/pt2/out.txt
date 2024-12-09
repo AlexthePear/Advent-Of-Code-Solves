@@ -1,0 +1,1 @@
+Total sum of valid mul instructions: 113965544

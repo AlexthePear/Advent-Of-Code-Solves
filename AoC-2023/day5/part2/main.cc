@@ -6,6 +6,25 @@
 // starting seed value thats already less we have to store. then for each seed
 // range we just store the minimum possible value that can exist in each range.
 // Part-1 code is gunna need some hella revamping but it should be doable
+
+void updateProgressBar(int progress, int total) {
+  const int barWidth = 50;
+  float percentage = static_cast<float>(progress) / total;
+  int barLength = static_cast<int>(percentage * barWidth);
+
+  std::cout << "\r[";
+  for (int i = 0; i < barLength; ++i) {
+    std::cout << "=";
+  }
+  for (int i = barLength; i < barWidth; ++i) {
+    std::cout << " ";
+  }
+
+  std::cout << "] " << std::setw(3) << static_cast<int>(percentage * 100.0)
+            << "%";
+  std::cout.flush();
+}
+
 template <typename T>
 void DisplayVector(std::vector<T> v, std::string vector_name) {
   std::cout << "Displaying " << vector_name << ": ";
@@ -55,9 +74,9 @@ long long SeedConversionDestination(std::vector<std::string> conversions,
     // std::cout << "seed: " << seed << std::endl;
     if (seed >= source_range_start &&
         seed < source_range_start + range_length) {
-      //   std::cout << "Seed is withing source range returning: "
-      //             << destination_range_start + (seed - source_range_start)
-      //             << std::endl;
+      // std::cout << "Seed is withing source range returning: "
+      //           << destination_range_start + (seed - source_range_start)
+      //           << std::endl;
       return destination_range_start + (seed - source_range_start);
     }
   }
@@ -72,18 +91,30 @@ long long GetMinimumDestinationInSeedRange(
       "fertilizer-to-water map:",  "water-to-light map:",
       "light-to-temperature map:", "temperature-to-humidity map:",
       "humidity-to-location map:"};
+  long long current_seed;
   long long minimum_seed_in_range = -1;
-  for (std::string s : conversion_order) {
-    for (long long i = seed; i < seed + range; i++) {
-      if (minimum_seed_in_range == -1) {
-        minimum_seed_in_range = SeedConversionDestination(conversion_map[s], i);
-      } else {
-        minimum_seed_in_range =
-            std::min(minimum_seed_in_range,
-                     SeedConversionDestination(conversion_map[s], i));
-      }
+  for (long long i = seed; i < seed + range; i++) {
+    current_seed = i;
+    for (std::string s : conversion_order) {
+      current_seed = SeedConversionDestination(conversion_map[s], current_seed);
     }
+    // std::cout << "Returning Conversion Destination: " << current_seed
+    //           << std::endl;
+    if (minimum_seed_in_range == -1) {
+      minimum_seed_in_range = current_seed;
+    } else {
+      // std::cout << "Comparing: " << current_seed << " and "
+      //           << minimum_seed_in_range << std::endl;
+      minimum_seed_in_range = std::min(current_seed, minimum_seed_in_range);
+    }
+
+    updateProgressBar(i - seed, range);
   }
+  // std::cout << "Completed seed range: " << seed << " to " << seed + range
+  //           << std::endl;
+  // std::cout << "Minimum seed in range: " << minimum_seed_in_range <<
+  // std::endl;
+
   return minimum_seed_in_range;
 }
 
@@ -110,6 +141,8 @@ int main() {
   for (int i = 0; i < seeds_.size(); i += 2) {
     results.push_back(GetMinimumDestinationInSeedRange(
         conversion_map, seeds_[i], seeds_[i + 1]));
+    std::cout << "Minimum Destination in current seed Range: " << results.back()
+              << std::endl;
   }
   // RESULTS
   DisplayVector(results, "results");
