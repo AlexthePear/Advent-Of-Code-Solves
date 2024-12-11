@@ -3,6 +3,7 @@
 #include <iostream>
 typedef long long ll;
 using namespace std;
+
 bool inBounds(int x, int y, int n, int m) {
   return x >= 0 && x < n && y >= 0 && y < m;
 }
