@@ -1,0 +1,10 @@
+Region: M Area: 5 Perimeter: 12
+Region: J Area: 11 Perimeter: 20
+Region: S Area: 3 Perimeter: 8
+Region: F Area: 10 Perimeter: 18
+Region: C Area: 15 Perimeter: 32
+Region: V Area: 13 Perimeter: 20
+Region: I Area: 18 Perimeter: 30
+Region: E Area: 13 Perimeter: 18
+Region: R Area: 12 Perimeter: 18
+2214

@@ -3,49 +3,49 @@
 #include <iostream>
 typedef long long ll;
 using namespace std;
+bool inBounds(int x, int y, int n, int m) {
+  return x >= 0 && x < n && y >= 0 && y < m;
+}
 
-void blink(list<string> &nums) {
-  auto it = nums.begin();
-  // while (it != nums.end()) {
-  //   cout << *it << " ";
-  //   it++;
-  // }
-  // cout << endl;
-  // it = nums.begin();
-
-  while (it != nums.end()) {
-    string num = *it;
-    if (num == "0") {
-      *it = "1";
-    } else if (num.size() % 2 == 0) {
-      string num1 = to_string(stoll(num.substr(0, num.size() / 2)));
-      string num2 = to_string(stoll(num.substr(num.size() / 2)));
-      *it = num1;
-      it++;
-      nums.insert(it, num2);
-      it--;
-    } else {
-      *it = to_string(stoll(num) * 2024);
+void dfs(vector<string>& graph, vector<vector<int>>& dirs,
+         vector<vector<bool>>& visited, int x, int y, int& score) {
+  int height = graph[x][y] - '0';
+  if (!visited[x][y] && height == 9) {
+    visited[x][y] = true;
+    score++;
+  }
+  for (vector<int> d : dirs) {
+    int nx = x + d[0], ny = y + d[1];
+    if (inBounds(nx, ny, graph.size(), graph[0].size())) {
+      int new_height = graph[nx][ny] - '0';
+      if (new_height == height + 1) {
+        dfs(graph, dirs, visited, nx, ny, score);
+      }
     }
-    it++;
   }
 }
 
 int main() {
   ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-  list<string> nums;
-  string num;
-  while (cin >> num) {
-    // cout << num << " ";
-    nums.push_back(num);
+  string line;
+  vector<string> graph;
+  while (cin >> line) {
+    graph.push_back(line);
   }
-  // cout << endl;
-  for (int i = 0; i < 25; i++) {
-    blink(nums);
+
+  // please make sure you paste in the input
+  int n = graph.size(), m = graph[0].size();
+
+  vector<vector<int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+  int score = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (graph[i][j] == '0') {
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        dfs(graph, dirs, visited, i, j, score);
+      }
+    }
   }
-  int total = 0;
-  // for (auto it = nums.begin(); it != nums.end(); it++) {
-  //   cout << *it << " ";
-  // }
-  cout << nums.size() << endl;
+  cout << score << endl;
 }

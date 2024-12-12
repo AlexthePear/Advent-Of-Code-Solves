@@ -4,48 +4,89 @@
 typedef long long ll;
 using namespace std;
 
-bool inBounds(int x, int y, int n, int m) {
-  return x >= 0 && x < n && y >= 0 && y < m;
-}
-
-void dfs(vector<string>& graph, vector<vector<int>>& dirs,
-         vector<vector<bool>>& visited, int x, int y, int& score) {
-  int height = graph[x][y] - '0';
-  if (!visited[x][y] && height == 9) {
-    score++;
-  }
-  for (vector<int> d : dirs) {
-    int nx = x + d[0], ny = y + d[1];
-    if (inBounds(nx, ny, graph.size(), graph[0].size())) {
-      int new_height = graph[nx][ny] - '0';
-      if (new_height == height + 1) {
-        dfs(graph, dirs, visited, nx, ny, score);
-      }
-    }
-  }
-}
-
 int main() {
   ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
   string line;
-  vector<string> graph;
-  while (cin >> line) {
-    graph.push_back(line);
-  }
-
-  // please make sure you paste in the input
-  int n = graph.size(), m = graph[0].size();
-
-  vector<vector<int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-  int score = 0;
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < m; j++) {
-      if (graph[i][j] == '0') {
-        vector<vector<bool>> visited(n, vector<bool>(m, false));
-        dfs(graph, dirs, visited, i, j, score);
+  cin >> line;
+  //   cout << line << endl;
+  vector<string> new_line;
+  unordered_set<string> swapped;
+  int file_idx = 0;
+  for (int i = 0; i < line.size(); i++) {
+    if (i % 2 == 0) {
+      for (int j = 0; j < line[i] - '0'; j++) {
+        new_line.push_back(to_string(file_idx));
+      }
+      file_idx++;
+    } else {
+      for (int j = 0; j < line[i] - '0'; j++) {
+        new_line.push_back(".");
       }
     }
   }
-  cout << score << endl;
+
+  for (int j = 0; j < new_line.size(); j++) {
+    cout << new_line[j] << " ";
+  }
+
+  cout << endl;
+
+  for (int i = new_line.size() - 1; i >= 0;) {
+    while (i >= 0 && new_line[i] == "." && swapped.count(new_line[i]) == 0) {
+      i--;
+    }
+    if (i < 0) {
+      break;
+    }
+    string start = new_line[i];
+    int num_size = 0;
+    cout << start << " length:  ";
+    while (i >= 0 && new_line[i] == start) {
+      i--;
+      num_size++;
+    }
+    cout << num_size << endl;
+
+    int j = i;
+    int free_space = 0;
+    int idx_min = new_line.size();
+    while (j >= 0) {
+      if (new_line[j] == ".") {
+        free_space++;
+      } else {
+        if (free_space >= num_size) {
+          idx_min = j + 1;
+        }
+        free_space = 0;
+      }
+      j--;
+    }
+
+    if (idx_min < new_line.size()) {
+      idx_min;
+      i++;
+      // swapped.insert(new_line[i]);
+      for (int k = 0; k < num_size; k++) {
+        cout << "swapping " << new_line[idx_min + k] << " with "
+             << new_line[i + k] << endl;
+        swap(new_line[idx_min + k], new_line[i + k]);
+      }
+      // for (int j = 0; j < new_line.size(); j++) {
+      //   cout << new_line[j] << " ";
+      // }
+
+      // cout << endl;
+    }
+  }
+
+  ll sum = 0;
+  for (int i = 0; i < new_line.size(); i++) {
+    cout << new_line[i];
+    if (new_line[i] == ".") {
+      continue;
+    }
+    sum += (stoi(new_line[i])) * i;
+  }
+  cout << endl;
+  cout << sum << endl;
 }
