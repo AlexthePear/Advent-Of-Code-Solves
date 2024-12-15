@@ -47,6 +47,12 @@ This repository is organized by **year**, **day**, and **parts**:
    ```
 
 
+# 🔧 Tools & Technologies
+
+- Languages: C++ (Primary).
+  - Exploring the use of STL (Standard Template Library) and advanced algorithms.
+- Compilers: GCC and Clang.
+  - Solutions are tested and ran Linux using WSL.
 
  # 🌟 Progress Tracker
 
@@ -59,12 +65,14 @@ Here's a quick look at my completion status:
 
 
 
-# 🔧 Tools & Technologies
 
-- Languages: C++ (Primary).
-  - Exploring the use of STL (Standard Template Library) and advanced algorithms.
-- Compilers: GCC and Clang.
-  - Solutions are tested and ran Linux using WSL.
+## ❤️ More Than Seasonal: My Love for Algorithms
+
+While Advent of Code is a festive highlight, my passion for algorithms and problem-solving extends year-round. If you’re interested in exploring more of my work, check out my [LeetCode profile](https://leetcode.com/your-username/) to see how I tackle challenges beyond the holiday season.  
+
+
+
+
  
 
 
